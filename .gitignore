@@ -4,3 +4,5 @@ env
 .env
 Pipfile
 Pipfile.lock
+testing.py
+testing.wav

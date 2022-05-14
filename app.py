@@ -1,14 +1,14 @@
 import os
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 from distutils.log import debug
 from flask import Flask, render_template
 app = Flask(__name__)
+import globals
 
-# load_dotenv()
-# globals.prefix = os.environ.get('PREFIX')
-# globals.token = os.environ.get('BOT_TOKEN')
-# globals.eventToken = os.environ.get('TICKETMASTER_TOKEN')
-# globals.apireq = EventRequester()
+# set global state
+# load environment variables from .env
+load_dotenv()
+globals.ASSEMBLYAI_API_KEY = os.environ.get('ASSEMBLYAI_API_KEY')
 
 @app.route('/')
 @app.route('/home')
