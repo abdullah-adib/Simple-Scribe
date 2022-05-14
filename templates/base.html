@@ -13,12 +13,11 @@
 			<img src="https://www.nicepng.com/png/full/88-881136_eye-clipart-robot-robot.png">
 			<br>
 			<button type="button" class="btn btn-primary">Add Audio File</button>
+            <!-- FILE UPLOADS -->
+            <h1>File Upload</h1>
+            <form action="{{ url_for('upload_file') }}" class="dropzone">
+            </form>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js"></script>
 		</div>
-		<button type="button" class="btn btn-primary">Add Audio File</button>
-    <!-- FILE UPLOADS -->
-    <h1>File Upload</h1>
-    <form action="{{ url_for('upload_file') }}" class="dropzone">
-    </form>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js"></script>
 	</body>
 </html>
