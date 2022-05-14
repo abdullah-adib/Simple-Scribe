@@ -1,5 +1,5 @@
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from distutils.log import debug
 from flask import Flask, render_template
 app = Flask(__name__)
