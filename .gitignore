@@ -1,8 +1,8 @@
 .vscode
+__pycache__/*
 __pycache__/
 env
 .env
-Pipfile
 Pipfile.lock
 testing.py
 testing.wav
