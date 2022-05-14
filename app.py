@@ -20,6 +20,9 @@ app = Flask(__name__, template_folder='templates',static_folder='css')
 # limit max upload size to 8 MB
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 8
 
+# path
+app.config['UPLOAD_PATH'] = 'uploads'
+
 # restrict file extensions
 app.config['UPLOAD_EXTENSIONS'] = [
     '.3ga', '.aac', '.ac3', '.aif', '.aiff', '.alac', '.amr', '.ape', '.au', 
@@ -51,7 +54,8 @@ def upload_file():
     if ext not in app.config['UPLOAD_EXTENSIONS']:
         abort(400)
     print('accepted file:' + filename)
-    return redirect(url_for('/home'))
+    uploaded.save(os.path.join(app.config['UPLOAD_PATH'], filename))
+    return redirect(url_for('home_page'))
 
 
 if __name__ == "__main__":

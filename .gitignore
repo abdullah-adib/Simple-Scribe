@@ -6,3 +6,4 @@ env
 Pipfile.lock
 testing.py
 testing.wav
+uploads
