@@ -1,0 +1,17 @@
+body {
+    background-color: SlateGrey;
+}
+h1 {
+    text-align: center;
+}
+p {
+    color: white;
+
+    font-size: 1.2em;
+    display: inline-block;
+    margin:  20px;
+}
+img {
+    margin: 60px 0 30px 0;
+    width: 200px;
+}

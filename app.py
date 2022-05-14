@@ -2,7 +2,7 @@ import os
 # from dotenv import load_dotenv
 from distutils.log import debug
 from flask import Flask, render_template
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates',static_folder='css')
 
 # load_dotenv()
 # globals.prefix = os.environ.get('PREFIX')
