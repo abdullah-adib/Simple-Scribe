@@ -73,6 +73,7 @@ def too_large(e):
     print('rejected file:' + filename)
     return "File too large (max {}MB)".format(maxSize), 413
 
+# delete file
 @app.route('/delete_file', methods=['POST'])
 def delete_file():
     print('delete request')
