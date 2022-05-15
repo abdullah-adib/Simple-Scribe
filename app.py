@@ -152,7 +152,10 @@ def createNewTranscribeTask(uid):
     print('{}: creating new worker'.format(uid))
     createLockFile(uid)
     path = os.path.join(app.config['UPLOAD_PATH'], uid)
+
     text = assemblyai.getTranscript(path)
+    # text = "f00f"
+
     createResultFile(uid, text)
     print('{}: worker finished'.format(uid))
 
