@@ -6,6 +6,8 @@
 ![gifforsite](https://user-images.githubusercontent.com/84144584/168483395-15c88c39-2624-4ffc-8947-01169f84ab8c.gif)
 
 
+_Simple-Scribe in action_
+
 
 
 ## Development :computer:
