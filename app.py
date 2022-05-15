@@ -58,6 +58,7 @@ def csrf_error(e):
 
 @app.errorhandler(413)
 def too_large(e):
+    print('rejected file:' + filename)
     return "File too large (max {}MB)".format(maxSize), 413
 
 # file upload event 
@@ -70,10 +71,12 @@ def upload_file():
         return "No file submitted.", 400
     ext = os.path.splitext(uploaded.filename)[1]
     if ext not in app.config['UPLOAD_EXTENSIONS']:
+        print('rejected file:' + filename)
         return "Bad file extension.", 400
     print('accepted file:' + filename)
     uploaded.save(os.path.join(app.config['UPLOAD_PATH'], filename))
-    return redirect(url_for('home_page'))
+    return '', 204
+    # return redirect(url_for('home_page'))
 
 
 if __name__ == "__main__":
