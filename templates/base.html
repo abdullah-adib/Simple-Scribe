@@ -1,24 +1,26 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title>Textify</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.css">
-		<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-	</head>
-	<body>
-		<div class="pagecomp">
-			<h1 class="display-4 font-weight-normal">Textify</h1>
-			<img src="https://www.nicepng.com/png/full/88-881136_eye-clipart-robot-robot.png">
-			<br>
-			<button type="button" class="btn btn-primary">Add Audio File</button>
-            <!-- FILE UPLOADS -->
-            <h1>File Upload</h1>
-            <form action="{{ url_for('upload_file') }}" class="dropzone">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            </form>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js"></script>
-		</div>
-	</body>
+	<div class="animated-area">	
+		<head>
+			<meta charset="UTF-8">
+			<title>Textify</title>
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.css">
+			<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+			<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+		</head>
+		<body>
+			<div class="pagecomp">
+				<h1 class="display-4 font-weight-normal">Textify</h1>
+				<img src="https://www.nicepng.com/png/full/88-881136_eye-clipart-robot-robot.png">
+				<br>
+				<button type="button" class="btn btn-primary">Add Audio File</button>
+				<!-- FILE UPLOADS -->
+				<h1>File Upload</h1>
+				<form action="{{ url_for('upload_file') }}" class="dropzone">
+					<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+				</form>
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js"></script>
+			</div>
+		</body>
+	</div>
 </html>
