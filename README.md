@@ -1,10 +1,4 @@
-<div align='center'>
-
-  ```
-  Simple-Scribe
-
-  ```
-</div>
+![_Simple-Scribe](https://user-images.githubusercontent.com/84144584/168478365-88fae434-a6a6-4846-a49d-ac8a8004872c.png)
 
 ## Overview :sparkles:
 
