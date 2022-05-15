@@ -1,4 +1,6 @@
 import os
+import threading
+# import asyncio
 import uuid
 from os.path import exists
 import base64
@@ -105,13 +107,92 @@ def upload_file():
     uploaded.save(os.path.join(app.config['UPLOAD_PATH'], actualFilename))
     return resp
 
+# LOCK FILE
+def getLockFilePath(uid):
+    return os.path.join(app.config['UPLOAD_PATH'], \
+        secure_filename('{}.LOCK'.format(uid)))
+
+def createLockFile(uid):
+    if not checkForLockFile(uid):
+        with open(getLockFilePath(uid), 'w') as fp:
+            pass
+
+# true -> lock exists
+def checkForLockFile(uid):
+    return exists(getLockFilePath(uid))
+
+def removeLockFile(uid):
+    if checkForLockFile(uid):
+        os.remove(getLockFilePath(uid))
+
+# RESULT FILE
+def getResultFilePath(uid):
+    return os.path.join(app.config['UPLOAD_PATH'], \
+        secure_filename('{}.RESULT'.format(uid)))
+
+# true -> result exists
+def checkForResultFile(uid):
+    return exists(getResultFilePath(uid))
+
+def createResultFile(uid, text):
+    # if not checkForLockFile(uid):
+    with open(getResultFilePath(uid), 'w') as fp:
+        fp.write(text)
+
+def removeResultFile(uid):
+    if checkForResultFile(uid):
+        os.remove(getResultFilePath(uid))
+
+def readResultFile(uid):
+    rf = open(getResultFilePath(uid), "r")
+    return rf.read()
+
+# TRANSCRIBE WORKERS
+def createNewTranscribeTask(uid):
+    print('{}: creating new worker'.format(uid))
+    createLockFile(uid)
+    path = os.path.join(app.config['UPLOAD_PATH'], uid)
+
+    text = assemblyai.getTranscript(path)
+    # text = "f00f"
+
+    createResultFile(uid, text)
+    print('{}: worker finished'.format(uid))
+
+# returns None when the worker is not done yet
+def getTranscribeResult(uid):
+    if not checkForResultFile(uid):
+        return None
+    # transcribe worker is done, return the result
+    text = readResultFile(uid)
+    removeResultFile(uid)
+    removeLockFile(uid)
+    return text
+
 @app.route('/start_transcribe', methods=['POST'])
 def start_transcribe():
-    print('got transcribe request')
-    resp, actualFilename = getCookie()
-    path = os.path.join(app.config['UPLOAD_PATH'], actualFilename)
-    print(assemblyai.getTranscript(path))
+    print('got transcribe start request')
+    resp, uid = getCookie()
+    path = os.path.join(app.config['UPLOAD_PATH'], uid)
+    # check if there is already an active worker
+    if checkForLockFile(uid):
+        print('transcribe worker already running')
+        return resp
+    # create new worker
+    threading.Thread(target=createNewTranscribeTask, args=(uid,)).start()
+    # tmp.append(asyncio.create_task(createNewTranscribeTask(uid)))
+    # asyncio.to_thread(createNewTranscribeTask, uid)
     return resp
+
+@app.route('/transcribe_ping', methods=['GET'])
+def transcribe_ping():
+    print('got transcribe ping request')
+    resp, uid = getCookie()
+    path = os.path.join(app.config['UPLOAD_PATH'], uid)
+    result = getTranscribeResult(uid)
+    if not (result is None):
+        print("worker finished with result: " + result)
+    return '' if result is None else result 
 
 if __name__ == "__main__":
     app.run(debug=True)

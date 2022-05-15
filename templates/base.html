@@ -25,8 +25,25 @@
                 <form>
                     <button id="btn_start" type="button" class="btn btn-dark">Transcribe</button>
                 </form>
+                <p id="tresult">sample text</p>
                 <script type=text/javascript>
+// let isGettingResult = false;
+function getResult() {
+//    if (isGettingResult === false)
+//        return;
+//    console.log('f00f');
+    $.get('/transcribe_ping', function(data, status) {
+        if (data !== '') {
+            console.log('bar');
+            document.getElementById("tresult").innerHTML = data; 
+            console.log(data);
+//            isGettingResult = false;
+        }
+    });
+}
+setInterval(getResult, 1000)
 $(function() {
+//    isGettingResult = true;
     $('#btn_start').on('click', function(e) {
         e.preventDefault()
         $.ajax({
