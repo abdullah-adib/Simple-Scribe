@@ -2,9 +2,7 @@ import os
 from dotenv import load_dotenv
 from distutils.log import debug
 from flask import Flask, render_template, request, redirect, url_for, abort
-
 from werkzeug.utils import secure_filename
-
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
 from wtforms import SubmitField
