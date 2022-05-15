@@ -1,4 +1,5 @@
 import os
+import base64
 from dotenv import load_dotenv
 from distutils.log import debug
 from flask import Flask, render_template, request, redirect, url_for, abort
@@ -6,6 +7,7 @@ from flask import Flask, render_template, request, redirect, url_for, abort
 from werkzeug.utils import secure_filename
 
 from flask_wtf import FlaskForm
+from flask_wtf.csrf import CSRFProtect, CSRFError
 from flask_wtf.file import FileField
 from wtforms import SubmitField
 
@@ -15,12 +17,15 @@ class AudioForm(FlaskForm):
     file = FileField('File')
     submit = SubmitField('Submit')
 
+# app configuration
 app = Flask(__name__, template_folder='templates',static_folder='css')
 
-# limit max upload size to 8 MB
-app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 8
+maxSize = 8
 
-# path
+# limit max upload size to 8 MB
+app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * maxSize
+
+# uploads path
 app.config['UPLOAD_PATH'] = 'uploads'
 
 # restrict file extensions
@@ -31,6 +36,12 @@ app.config['UPLOAD_EXTENSIONS'] = [
     '.webm', '.MTS,', '.M2TS,', '.TS', '.mov', '.mp4,', '.m4p,', '.m4v', '.mxf'
 ]
 
+# csrf protection
+secret_key = os.urandom(32)
+app.config['SECRET_KEY'] = secret_key
+app.config['DROPZONE_ENABLE_CSRF'] = True
+csrf = CSRFProtect(app)
+
 # set global state
 # load environment variables from .env
 load_dotenv()
@@ -38,9 +49,16 @@ globals.ASSEMBLYAI_API_KEY = os.environ.get('ASSEMBLYAI_API_KEY')
 
 @app.route('/')
 @app.route('/home')
-
 def home_page():
     return render_template('base.html')
+
+@app.errorhandler(CSRFError)
+def csrf_error(e):
+    return e.description, 400
+
+@app.errorhandler(413)
+def too_large(e):
+    return "File too large (max {}MB)".format(maxSize), 413
 
 # file upload event 
 @app.route('/', methods=['POST'])
@@ -49,10 +67,10 @@ def upload_file():
     uploaded = request.files['file']
     filename = secure_filename(uploaded.filename)
     if filename == '':
-        abort(400)
+        return "No file submitted.", 400
     ext = os.path.splitext(uploaded.filename)[1]
     if ext not in app.config['UPLOAD_EXTENSIONS']:
-        abort(400)
+        return "Bad file extension.", 400
     print('accepted file:' + filename)
     uploaded.save(os.path.join(app.config['UPLOAD_PATH'], filename))
     return redirect(url_for('home_page'))
