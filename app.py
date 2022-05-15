@@ -1,14 +1,16 @@
 import os
+import uuid
 from os.path import exists
 import base64
 from dotenv import load_dotenv
 from distutils.log import debug
-from flask import Flask, render_template, request, redirect, url_for, abort
+from flask import Flask, render_template, request, redirect, url_for, abort, make_response
 from werkzeug.utils import secure_filename
 from flask_wtf import FlaskForm
 from flask_wtf.csrf import CSRFProtect, CSRFError
 from flask_wtf.file import FileField
 from wtforms import SubmitField
+import assemblyai
 import globals
 
 class AudioForm(FlaskForm):
@@ -33,7 +35,7 @@ app.config['UPLOAD_EXTENSIONS'] = [
     '.oga,', '.mogg', '.opus', '.qcp', '.tta', '.voc', '.wav', '.wma', '.wv',
     '.webm', '.MTS,', '.M2TS,', '.TS', '.mov', '.mp4,', '.m4p,', '.m4v', '.mxf'
 ]
-    
+
 # csrf protection
 secret_key = os.urandom(32)
 app.config['SECRET_KEY'] = secret_key
@@ -44,6 +46,18 @@ csrf = CSRFProtect(app)
 # load environment variables from .env
 load_dotenv()
 globals.ASSEMBLYAI_API_KEY = os.environ.get('ASSEMBLYAI_API_KEY')
+
+user_id_key = "user_id"
+
+def getCookie():
+    if not request.cookies.get('uid'):
+        res = make_response("Setting a cookie")
+        cookieValue = uuid.uuid4().hex
+        res.set_cookie('uid', cookieValue, max_age=3600)
+    else:
+        cookieValue = request.cookies.get('uid')
+        res = make_response("Value of cookie foo is {}".format(cookieValue))
+    return (res, cookieValue)
 
 @app.route('/')
 @app.route('/home')
@@ -65,12 +79,13 @@ def delete_file():
     filename = secure_filename(request.form['name'])
     if filename == '':
         return "No file submitted.", 400
-    path = os.path.join(app.config['UPLOAD_PATH'], filename)
+    resp, actualFilename = getCookie()
+    path = os.path.join(app.config['UPLOAD_PATH'], actualFilename)
     if not exists(path):
         return "File does not exist.", 400
     print('deleting ' + filename)
     os.remove(path)
-    return '', 204
+    return resp
 
 # file upload event 
 @app.route('/upload_file', methods=['POST'])
@@ -85,8 +100,17 @@ def upload_file():
         print('rejected file:' + filename)
         return "Bad file extension.", 400
     print('accepted file:' + filename)
-    uploaded.save(os.path.join(app.config['UPLOAD_PATH'], filename))
-    return '', 204
+    resp, actualFilename = getCookie()
+    uploaded.save(os.path.join(app.config['UPLOAD_PATH'], actualFilename))
+    return resp
+
+@app.route('/start_transcribe', methods=['POST'])
+def start_transcribe():
+    print('got transcribe request')
+    resp, actualFilename = getCookie()
+    path = os.path.join(app.config['UPLOAD_PATH'], actualFilename)
+    print(assemblyai.getTranscript(path))
+    return resp
 
 if __name__ == "__main__":
     app.run(debug=True)
