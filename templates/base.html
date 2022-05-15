@@ -17,6 +17,7 @@
 				<!-- FILE UPLOADS -->
 				<h1>File Upload</h1>
 				<form action="{{ url_for('upload_file') }}" class="dropzone">
+					<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 				</form>
 				<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js"></script>
 			</div>
