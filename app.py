@@ -1,4 +1,5 @@
 import os
+from os.path import exists
 import base64
 from dotenv import load_dotenv
 from distutils.log import debug
@@ -59,8 +60,21 @@ def too_large(e):
     print('rejected file:' + filename)
     return "File too large (max {}MB)".format(maxSize), 413
 
+@app.route('/delete_file', methods=['POST'])
+def delete_file():
+    print('delete request')
+    filename = secure_filename(request.form['name'])
+    if filename == '':
+        return "No file submitted.", 400
+    path = os.path.join(app.config['UPLOAD_PATH'], filename)
+    if not exists(path):
+        return "File does not exist.", 400
+    print('deleting ' + filename)
+    os.remove(path)
+    return '', 204
+
 # file upload event 
-@app.route('/', methods=['POST'])
+@app.route('/upload_file', methods=['POST'])
 def upload_file():
     print('got upload request')
     uploaded = request.files['file']
@@ -74,8 +88,6 @@ def upload_file():
     print('accepted file:' + filename)
     uploaded.save(os.path.join(app.config['UPLOAD_PATH'], filename))
     return '', 204
-    # return redirect(url_for('home_page'))
-
 
 if __name__ == "__main__":
     app.run(debug=True)
