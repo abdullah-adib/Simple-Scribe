@@ -9,7 +9,6 @@ from flask_wtf import FlaskForm
 from flask_wtf.csrf import CSRFProtect, CSRFError
 from flask_wtf.file import FileField
 from wtforms import SubmitField
-
 import globals
 
 class AudioForm(FlaskForm):
@@ -34,7 +33,7 @@ app.config['UPLOAD_EXTENSIONS'] = [
     '.oga,', '.mogg', '.opus', '.qcp', '.tta', '.voc', '.wav', '.wma', '.wv',
     '.webm', '.MTS,', '.M2TS,', '.TS', '.mov', '.mp4,', '.m4p,', '.m4v', '.mxf'
 ]
-
+    
 # csrf protection
 secret_key = os.urandom(32)
 app.config['SECRET_KEY'] = secret_key

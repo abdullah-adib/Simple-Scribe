@@ -12,8 +12,6 @@ html,.animated-area{
     background-size: 400% 400%;
     position: relative;
     animation: change 10s ease-in-out alternate infinite;
-   
-    
 }
 
 @keyframes change {
