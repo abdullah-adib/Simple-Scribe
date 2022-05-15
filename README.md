@@ -1,7 +1,8 @@
 <div align='center'>
 
   ```
-  Textify
+  Simple-Scribe
+
   ```
 </div>
 
