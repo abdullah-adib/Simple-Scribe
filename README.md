@@ -28,10 +28,6 @@ $ pipenv install -r requirements.txt
 ```
 
 Provide environment variables ~ Create .env file
-```sh
-TICKETMASTER_TOKEN=your_key_here
-BOT_TOKEN=your_key_here
-```
 
 ### Usage
 ```sh
